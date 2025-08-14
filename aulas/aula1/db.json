@@ -1,0 +1,19 @@
+{
+  "contatos": [
+    {
+      "id": "9d44",
+      "nome": "julia",
+      "email": "julia@gmail.com"
+    },
+    {
+      "id": "8289",
+      "nome": "rita",
+      "email": "rita@gmail.com"
+    },
+    {
+      "id": "be14",
+      "nome": "jose",
+      "email": "josejunio@gmail.com"
+    }
+  ]
+}

@@ -13,6 +13,8 @@ describe('Teste do recurso /tarefas', () => {
         const response = await request.post(url).send({nome: "Estudar"});
         expect(response.status).toBe(201);
         expect(response.body.id).toBeDefined();
+        expect(response.body.nome).toBe("Estudar");
+        expect(response.body.concluida).toBe(false)
         id = response.body.id;
     });
 
@@ -20,6 +22,7 @@ describe('Teste do recurso /tarefas', () => {
         const response = (await request.get(url));
         expect(response.status).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
+
         
     });
     test('GET /id deve retornar 200', async() => {

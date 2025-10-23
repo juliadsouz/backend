@@ -1,20 +1,36 @@
-const Tarefa = require('../models/tarefasModel')
+const mongoose = require('mongoose');
+const Tarefa = require('../models/tarefasModel');
 
 async function criar(req, res) {
-    const novaTarefa = await Tarefa.create({
+    try{
+        const novaTarefa = await Tarefa.create({
         nome: req.body.nome,
         concluida: false
     })
-    return res.status(201).json({id: novaTarefa._id, nome: novaTarefa.nome, concluida: novaTarefa.concluida});
+    return res.status(201).json({
+        id: novaTarefa._id, 
+        nome: novaTarefa.nome, 
+        concluida: novaTarefa.concluida});
+    } catch(err) {
+        if(err.errors){
+        return res.status(422).json({msg: err.errors['nome'].message});
+        }
+    }
+    return res.status(500).json({})
 }
 
 async function listar(req, res){
     const tarefas = await Tarefa.find({});
-    return res.json([tarefas]);
+    return res.json(tarefas);
 };
 
 async function buscar(req, res, next) {
-    const {id} = req.params;
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({msg: "ID Invalido"})
+    }
+
     const tarefaEncontrada = await Tarefa.findOne({_id: id});
     if (tarefaEncontrada) {
         req.tarefa = {
@@ -33,16 +49,22 @@ function exibir(req, res){
 }
 
 async function atualizar(req, res){
-    const { id } = req.params;
+   try {const { id } = req.params;
     const tarefaAtualizada = await Tarefa.findOneAndUpdate(
         { _id: id },
-        { ...req.body }
+        { ...req.body },
+        {new: true, runValidators: true }
     );
     return res.json({
         id: tarefaAtualizada._id,
         nome: tarefaAtualizada.nome,
         concluida: tarefaAtualizada.concluida,
     }); 
+} catch(err) {
+    if(err.errors){
+    return res.status(422).json({msg: err.errors['nome'].message});
+    }
+}
 }
 
 async function remover(req, res){

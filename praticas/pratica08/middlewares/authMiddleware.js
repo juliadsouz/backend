@@ -4,9 +4,15 @@ function verificarToken(req, res, next) {
     try {
       const { authorization } = req.headers;
       const token = authorization; 
+        
+      if (!authorization) {
+      return res.status(401).json({ msg: "Não autorizado" });}
+
       const payload = jwt.verify(token, process.env.JWT_SECRET);
       req.usuario = payload;
+
       next();
+
     } catch (err) {
       return res.status(401).json({ msg: "Token Inválido" });
     }
@@ -15,7 +21,7 @@ function verificarToken(req, res, next) {
  function gerarToken(payload) {
     try{
         const expiresIn = 120;
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn} );
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
         return token
     } catch (err) {
         throw Error ("Erro ao gerar um token");

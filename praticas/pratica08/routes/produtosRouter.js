@@ -1,8 +1,8 @@
 const express = require('express');
-const authMiddleware = require("../middleware/authMiddleware.js");
+const authMiddleware = require("../middlewares/authMiddleware.js");
 const router = express.Router();
 
-router.get('/produtos', authMiddleware.verificarToken, (req, res) =>
+router.get('/', authMiddleware.verificarToken, (req, res) =>
 {
     res.json([])
 });
